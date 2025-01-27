@@ -8,84 +8,37 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import starTypesData from '@/data/processed-data.json';
 
-interface Species {
+interface BodyType {
   name: string;
-  value: number;
-  planets: string[];
+  count: number;
+  percentage: number;
+}
+
+interface Atmosphere {
+  name: string;
+  count: number;
+  percentage: number;
+}
+
+interface SpeciesContribution {
+  species: string;
+  contribution: number;
+  probability: number;
+  count: number;
+  bodyTypes: BodyType[];
+  atmospheres: Atmosphere[];
 }
 
 interface StarType {
   name: string;
   expectedValue: number;
-  species: Species[];
+  totalOccurrences: number;
+  speciesContributions: SpeciesContribution[];
 }
 
-const starTypes: StarType[] = [
-  {
-    name: "Class M Red Dwarf",
-    expectedValue: 1650000,
-    species: [
-      {
-        name: "Bacterium Aurasus",
-        value: 350000,
-        planets: ["High metal content worlds", "Rocky bodies"],
-      },
-      {
-        name: "Bacterium Vesicula",
-        value: 425000,
-        planets: ["Metal-rich bodies", "Rocky worlds"],
-      },
-      {
-        name: "Concha Renibus",
-        value: 875000,
-        planets: ["High metal content worlds", "Rocky bodies with atmosphere"],
-      },
-    ],
-  },
-  {
-    name: "Class K Orange Giant",
-    expectedValue: 1825000,
-    species: [
-      {
-        name: "Frutexa Flabellum",
-        value: 725000,
-        planets: ["Rocky ice worlds", "Icy bodies"],
-      },
-      {
-        name: "Tubus Compagibus",
-        value: 500000,
-        planets: ["Metal-rich bodies", "High metal content worlds"],
-      },
-      {
-        name: "Tussock Pennata",
-        value: 600000,
-        planets: ["Rocky bodies", "Rocky ice worlds"],
-      },
-    ],
-  },
-  {
-    name: "Class F White Star",
-    expectedValue: 2100000,
-    species: [
-      {
-        name: "Electricae Pluma",
-        value: 800000,
-        planets: ["Metal-rich bodies", "High metal content worlds"],
-      },
-      {
-        name: "Fonticulua Segmentatus",
-        value: 650000,
-        planets: ["Rocky bodies", "High metal content worlds"],
-      },
-      {
-        name: "Tussock Caeruleum",
-        value: 650000,
-        planets: ["Rocky ice worlds", "Icy bodies"],
-      },
-    ],
-  },
-];
+const starTypes: StarType[] = starTypesData;
 
 export default function Home() {
   const [openStarType, setOpenStarType] = useState<string | null>(null);
@@ -135,9 +88,9 @@ export default function Home() {
                   </AccordionTrigger>
                   <AccordionContent>
                     <div className="space-y-4 pt-2">
-                      {starType.species.map((species) => (
+                      {starType.speciesContributions.map((speciesContribution) => (
                         <Accordion
-                          key={species.name}
+                          key={speciesContribution.species}
                           type="single"
                           collapsible
                           className="bg-[#141414] rounded-lg p-4 border-l border-[#ff8c32]/30"
@@ -148,10 +101,10 @@ export default function Home() {
                           >
                             <div className="flex items-center justify-between mb-2">
                               <h3 className="text-lg font-light font-rajdhani">
-                                {species.name}
+                                {speciesContribution.species}
                               </h3>
                               <p className="font-mono font-bold">
-                                {species.value.toLocaleString()} cr
+                                {speciesContribution.contribution.toLocaleString()} cr
                               </p>
                             </div>
                             <AccordionTrigger className="py-0 hover:text-[#ff8c32] hover:no-underline">
@@ -161,9 +114,16 @@ export default function Home() {
                             </AccordionTrigger>
                             <AccordionContent>
                               <ul className="list-none text-sm text-[#ff8c32]/90 mt-2 space-y-1 font-rajdhani font-light">
-                                {species.planets.map((planet) => (
-                                  <li key={planet} className="flex items-center gap-2 before:content-['▶'] before:text-[0.5em] before:text-[#ff8c32]/50">
-                                    {planet}
+                                {speciesContribution.bodyTypes.map((bodyType) => (
+                                  <li key={bodyType.name} className="flex items-center gap-2 before:content-['▶'] before:text-[0.5em] before:text-[#ff8c32]/50">
+                                    {bodyType.name}
+                                  </li>
+                                ))}
+                              </ul>
+                              <ul className="list-none text-sm text-[#ff8c32]/90 mt-2 space-y-1 font-rajdhani font-light">
+                                {speciesContribution.atmospheres.map((atmosphere) => (
+                                  <li key={atmosphere.name} className="flex items-center gap-2 before:content-['▶'] before:text-[0.5em] before:text-[#ff8c32]/50">
+                                    {atmosphere.name}
                                   </li>
                                 ))}
                               </ul>

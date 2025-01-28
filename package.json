@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "regenerate-data": "node data/transform-species-data.js"
+    "reprocess-data": "node data/transform-species-data.js",
+    "refetch-data": "node data/fetch-species-data.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
